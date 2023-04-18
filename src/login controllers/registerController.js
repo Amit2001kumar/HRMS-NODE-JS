@@ -1,5 +1,7 @@
 const {validationResult} = require('express-validator');
 const bcrypt = require('bcryptjs');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('myTotallySecretKey')
 const conn = require('./../../config/db.config').promise();
 var nodemailer=require("nodemailer");
 const express=require("express");
@@ -45,7 +47,9 @@ exports.register = async(req,res,next) => {
 
         const hashPass = await bcrypt.hash(req.body.Password, 12);
 
-       
+        const decryptedString =await cryptr.decrypt(req.body.pass); //info pass decrpt
+//        console.log("decryptedString",decryptedString);
+        
         // const [rows] = await conn.execute('INSERT INTO `users`(`FirstName`,`LastName`,`Email`,`Password`)VALUES(?,?,?,?)',
         const [rows] = await conn.execute('INSERT INTO `invite_users`(`FirstName`,`LastName`,`Email`,`Password`)VALUES(?,?,?,?)',
         [
@@ -64,45 +68,64 @@ exports.register = async(req,res,next) => {
       {
                     //...............
             var transporter = nodemailer.createTransport({
-
-                host: "smtp.gmail.com",
-        
-                port: 465,
-        
-                secure: true,
-        
-                requireTLS: true,
-        
-                auth: {
-        
-                //   user: "deependrajhariya@gmail.com",
-        
-                //   pass: "hdtbydueivagdhdu",
                 
-                   user: "ab308175@gmail.com",
+                 host: "smtp-mail.outlook.com", // hostname
+              secureConnection: false, // TLS requires secureConnection to be false
+              port: 587, // port for secure SMTP
+              tls: {
+                 ciphers:'SSLv3'
+              },
+                
+                
+                auth:{
+                user:req.body.usermailid,
+                pass:decryptedString               //req.body.pass
+              },
+                
+                
+                
+
+                
+                 
+
+//                 host: "smtp.gmail.com",
         
-                   pass: "avzpuhiwivqhsetb"
+//                 port: 465,
+        
+//                 secure: true,
+        
+//                 requireTLS: true,
+        
+//                 auth: {
+        
+               
+                
+//                    user: "ab308175@gmail.com",
+        
+//                    pass: "diaxeomfpnepqsok"
 
                  
         
-                },
+//                 },
         
               });
         
         
               var mailOptions = {
-        
-                //  from: "deependrajhariya@gmail.com",
-                 from:"ab308175@gmail.com",
+                  
+//          from:"ab308175@gmail.com",  
+//           from:"asma.bano@cylsys.com",
                
-                to: req.body.Email,
+                 from:req.body.usermailid,
+                to:req.body.Email,
+              
         
                 subject: "Company Login Credentials",
         
                 // html:"<h3>Hello:</h3> "+req.body.FirstName+"    "+req.body.LastName+" <br><br><h3>This is your Email id:</h3> "+req.body.Email+"<h1>Password is: </h1>"+req.body.Password
                 // +"'<br><br><h1>please click on this link for completing your Pre-Onboarding Process:</h1>"+"http://welcomeemp.cylsys.com/"
                  
-                html:"Hii"+" "+req.body.FirstName+","+"<br>"+
+                html:"Hi"+" "+req.body.FirstName+","+"<br>"+
 
                 "<br>This is a Invite details that has to be filled by you.<br>"+
                 

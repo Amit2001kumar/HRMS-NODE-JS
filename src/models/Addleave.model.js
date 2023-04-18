@@ -2,12 +2,16 @@ var dbConn = require('./../../config/db.config');
 
 //Leaves object create
 var Addleave = function(leaves){
-    this.EmployeeId     = leaves.EmployeeId;
+    this.Name     = leaves.Name;
     this.LeaveType      = leaves.LeaveType;
-    this.TeamEmail          = leaves.TeamEmail;
+    this.NumberOfDays          = leaves.NumberOfDays;
     this.DateFrom          = leaves.DateFrom;
     this.DateTo         = leaves.DateTo;
-    this.ReasonForLeave   = leaves.ReasonForLeave;
+    this.Description   = leaves.Description;
+    this.LeaveDuration=leaves.LeaveDuration;
+   
+    this.createdBy=leaves.createdBy;
+   this.modifiedBy=leaves.modifiedBy;
     this.createdDate     = new Date();
  
     
@@ -50,10 +54,24 @@ Addleave.findAll = function (result) {
     });   
 };
 
+Addleave.findTotalLeave = function (result) {
+    dbConn.query("Select sum(NumberOfDays) as TotalLeave from tbl_addleave", function (err, res) {
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }
+        else{
+            console.log('Leaves : ', res);  
+            result(null, res[0]);
+        }
+    });   
+};
+
 Addleave.update = function(AddLeaveId, leave, result){
    // const idint = bigInt(id).value;
-  dbConn.query("UPDATE tbl_addleave SET EmployeeId=?,LeaveType=?,TeamEmail=?,DateFrom=?,DateTo=?,ReasonForLeave=? WHERE AddLeaveId =?",
-  [leave.EmployeeId,leave.LeaveType,leave.TeamEmail,leave.DateFrom,leave.DateTo,leave.ReasonForLeave,AddLeaveId], function (err, res) {
+    let d=new Date();
+  dbConn.query("UPDATE tbl_addleave SET Name=?,LeaveType=?,NumberOfDays=?,DateFrom=?,DateTo=?,Description=?,LeaveDuration=?,modifiedBy=?,modifiedDate=? WHERE AddLeaveId =?",
+  [leave.Name,leave.LeaveType,leave.NumberOfDays,leave.DateFrom,leave.DateTo,leave.Description,leave.LeaveDuration,leave.modifiedBy,d,AddLeaveId], function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);

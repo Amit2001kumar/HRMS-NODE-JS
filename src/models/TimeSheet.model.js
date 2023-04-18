@@ -11,9 +11,10 @@ this.employeeId = timedata.employeeId;
     this.WorkingHours = timedata.WorkingHours;
 
     this.Task = timedata.Task;
-    this.CompanyID = timedata.CompanyID;
-
-
+    this.company_id = timedata.company_id;
+ this.Action=timedata.Action
+    this.SubmittedHours=timedata.SubmittedHours;
+this.Approval_date=new Date();
 };
 TimeSheet.create = function (newTimeSheet, result) {
     dbConn.query("INSERT INTO tbl_timesheet set ?", newTimeSheet, function (err, res) {
@@ -40,8 +41,8 @@ TimeSheet.findById = function (TimeSheetId, result) {
     });
 };
 
-TimeSheet.findAll = function (result) {
-    dbConn.query("Select * from tbl_timesheet", function (err, res) {
+TimeSheet.findAll = function (company_id,result) {
+    dbConn.query("Select * from tbl_timesheet where company_id=?",company_id,function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -93,8 +94,8 @@ TimeSheet.month = function (employeeId, result) {
     });
 };
 
-TimeSheet.findByEmpId = function (empID, result) {
-    dbConn.query("Select * from tbl_timesheet where employeeId = ? ", empID, function (err, res) {
+TimeSheet.findByEmpId = function (empID,company_id, result) {
+    dbConn.query("Select * from tbl_timesheet where employeeId = ? AND company_id=?",[empID,company_id],function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -123,5 +124,22 @@ TimeSheet.findBySearch = function (params, result) {
 };
 
 
+
+
+
+
+TimeSheet.updateForApproval = function (employeeId,TimeSheetId, data, result) {
+ 
+//     console.log(data.Approval_date, data.Action,employeeId, TimeSheetId);
+    dbConn.query("UPDATE tbl_timesheet SET  Action=?, Approval_date=? WHERE employeeId =? and TimeSheetId=?",
+        [ data.Action,data.Approval_date,employeeId, TimeSheetId], function (err, res) {
+            if (err) {
+                console.log("error: ", err);
+                result(null, err);
+            } else {
+                result(null, res);
+            }
+        });
+};
 
 module.exports = TimeSheet;

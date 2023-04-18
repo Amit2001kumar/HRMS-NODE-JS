@@ -10,6 +10,16 @@ exports.findAll = function(req, res) {
   });
 };
 
+exports.findTotalLeave = function(req, res) {
+    Addleave.findTotalLeave(function(err, leaves) {
+    console.log('controller')
+    if (err)
+    res.send(err);
+    console.log('res', leaves);
+    res.send(leaves);
+  });
+};
+
 
 exports.add = function(req, res) {
     const new_leaves = new Addleave(req.body);

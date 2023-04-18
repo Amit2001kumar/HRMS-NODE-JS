@@ -15,9 +15,8 @@ router.get('/:Action', PendingReportController.findByAction);
 router.put('/:PendingReportID', PendingReportController.update);
 
 
-
-// router.patch('/:EmployeeId', Pending_report_controller.update_leave_status);
-// router.patch('/multipleid/:EmployeeId', Pending_report_controller.multipleupdateUser);
+// UPDATE - PATCH
+router.put('/updateById/:EmployeeId', PendingReportController.updateById);
 
 
 

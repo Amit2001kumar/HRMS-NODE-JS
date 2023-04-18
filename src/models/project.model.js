@@ -2,7 +2,7 @@ var dbConn = require('./../../config/db.config');
 
 //Employee object create
 var Project = function (project) {
-    this.employee_id = project.employee_id;
+//     this.employee_id = project.employee_id;
     this.project_name = project.project_name;
     this.project_owner = project.project_owner;
     this.project_owner_email = project.project_owner_email;
@@ -15,13 +15,14 @@ var Project = function (project) {
     this.updated_at = new Date();
 };
 
+
 Project.create = function (newProject, repository, result) {
     let repositoryValues = [];
 
 
     for (let i = 0; i < repository.length; i++) {
         repositoryValues.push([
-            newProject.employee_id,
+            newProject.project_name,
             repository[i].repository_type,
             repository[i].new_repository,
             repository[i].remark,
@@ -36,7 +37,7 @@ Project.create = function (newProject, repository, result) {
                 throw err;
             console.log("Project of records inserted: " + res.affectedRows);
 
-            dbConn.query("INSERT INTO repository(employee_id,repository_type,new_repository,remark) VALUES ?", [repositoryValues],
+            dbConn.query("INSERT INTO repository(project_name,repository_type,new_repository,remark) VALUES ?", [repositoryValues],
                 function (err, res) {
                     if (err) throw err;
                     console.log("repository of records inserted: " + res.affectedRows);
@@ -70,53 +71,53 @@ Project.delete = function (project_name, result) {
 
 
 
-Project.update = function (id, project, result) {
-    dbConn.query
-        ("UPDATE projects SET project_name=?,project_owner=?,project_owner_email=?,status=?,client_name=?,client_poc1=?,client_poc2=?, cliente_email_id=? WHERE id= ?",
-            [project.project_name, project.project_owner, project.project_owner_email, project.status, project.client_name, project.client_poc1, project.client_poc2, project.cliente_email_id,id],
-            function (err, res) {
-                if (err) {
-                    console.log("error: ", err);
-                    result(null, err);
-                } else {
-                    result(null, res);
-                }
-            });
-};
-
-
-
-// Project.update = function (employee_id, project, repository, result) {
-//     let repositoryValues = [];
-
-//     for (let i = 0; i < repository.length; i++) {
-//         repositoryValues.push([
-//             // newProject.employee_id,
-//             repository[i].repository_type,
-//             repository[i].new_repository,
-//             repository[i].remark,
-//         ])
-//     }
-
-//     dbConn.query("UPDATE projects SET project_name=?,project_owner=?,project_owner_email=?,status=?,client_name=?,client_poc1=?,client_poc2=?, cliente_email_id=? WHERE employee_id= ?", [project.project_name, project.project_owner, project.project_owner_email, project.status, project.client_name, project.client_poc1, project.client_poc2, project.cliente_email_id, employee_id],
-//         function (err, res) {
-//             if (err)
-//                 throw err;
-//             console.log("project of records updated: " + res.affectedRows);
-
-//             for (let i = 0; i < repository.length; i++) {
-//                 dbConn.query("UPDATE repository SET repository_type=?, new_repository=?, remark=? where employee_id=?", [repository[i].repository_type, repository[i].new_repository, repository[i].remark, employee_id],
-//                     function (err, res) {
-//                         if (err) throw err;
-//                         console.log("repository of records inserted: " + res.affectedRows);
-//                     });
-//             }
-
-//             // console.log("check")
-//             result(null, res.insertId);
-//         });
-
+// Project.update = function (id, project, result) {
+//     dbConn.query
+//         ("UPDATE projects SET project_name=?,project_owner=?,project_owner_email=?,status=?,client_name=?,client_poc1=?,client_poc2=?, cliente_email_id=? WHERE id= ?",
+//             [project.project_name, project.project_owner, project.project_owner_email, project.status, project.client_name, project.client_poc1, project.client_poc2, project.cliente_email_id,id],
+//             function (err, res) {
+//                 if (err) {
+//                     console.log("error: ", err);
+//                     result(null, err);
+//                 } else {
+//                     result(null, res);
+//                 }
+//             });
 // };
+
+
+
+Project.update = function (project_name, project, repository, result) {
+    let repositoryValues = [];
+
+    for (let i = 0; i < repository.length; i++) {
+        repositoryValues.push([
+            // newProject.employee_id,
+            repository[i].repository_type,
+            repository[i].new_repository,
+            repository[i].remark,
+        ])
+    }
+
+    dbConn.query("UPDATE projects SET project_name=?,project_owner=?,project_owner_email=?,status=?,client_name=?,client_poc1=?,client_poc2=?, cliente_email_id=? WHERE project_name= ?", [project.project_name, project.project_owner, project.project_owner_email, project.status, project.client_name, project.client_poc1, project.client_poc2, project.cliente_email_id, project_name],
+        function (err, res) {
+            if (err)
+                throw err;
+            console.log("project of records updated: " + res.affectedRows);
+
+            for (let i = 0; i < repository.length; i++) {
+                dbConn.query("UPDATE repository SET repository_type=?, new_repository=?, remark=? where project_name=?", [repository[i].repository_type, repository[i].new_repository, repository[i].remark, project_name],
+                    function (err, res) {
+                        if (err) throw err;
+                        console.log("repository of records inserted: " + res.affectedRows);
+                    });
+            }
+
+            // console.log("check")
+            result(null, res.insertId);
+        });
+
+};
 
 
 Project.findAll = function (result) {
@@ -137,7 +138,7 @@ Project.findBySearch = function (params, result) {
     let project_name = params.project_name;
     let project_owner = params.project_owner;
     let status = params.status;
-    var sql = 'SELECT * FROM projects WHERE project_name = ? OR project_owner = ? OR status = ?';
+    var sql = 'SELECT * FROM projects WHERE project_name = ? AND project_owner = ? AND status = ?';
     dbConn.query(sql, [project_name, project_owner, status], function (err, res) {             
         if(err) {
             console.log("error: ", err);
@@ -149,9 +150,39 @@ Project.findBySearch = function (params, result) {
     });   
 };
 
+Project.findByMultiSearch = function (params, result) {
+    let project = params.project;
+    let project_owner = params.project_owner;
+    let status = params.status;
+    var sql = 'SELECT * FROM project WHERE project = ? OR project_owner = ? OR status = ? ';
+    dbConn.query(sql, [project, project_owner, status], function (err, res) {             
+        if(err) {
+            console.log("error: ", err);
+            result(err, null);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
 
-Project.findById = function (id, result) {
-    dbConn.query("Select * from projects where id = ? ", id, 
+// Project.findById = function (id, result) {
+//     dbConn.query("Select * from projects where id = ? ", id, 
+    
+//     function (err, res) {             
+//         if(err) {
+//             console.log("error: ", err);
+//             result(err, null);
+//         }
+//         else{
+//             result(null, res);
+//         }
+//     });   
+// };
+
+
+Project.findById = function (project_name, result) {
+    dbConn.query("SELECT * FROM projects inner join repository on projects.project_name = repository.project_name where projects.project_name = ? ", project_name, 
     
     function (err, res) {             
         if(err) {
@@ -163,9 +194,6 @@ Project.findById = function (id, result) {
         }
     });   
 };
-
-
-
 
 
 

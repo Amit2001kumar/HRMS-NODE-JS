@@ -16,8 +16,8 @@ let storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(
       null,
-// file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-         
+      // file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+
       file.originalname
 
     );
@@ -43,7 +43,7 @@ router.post("/document", upload.single("profile"), function (req, res) {
     console.log("file received");
     console.log(req);
     var sql =
-      "INSERT INTO `project_attachment` (`name`, `type`, `size`, `path`, `originalname`,`project_name`) VALUES ('" +
+      "INSERT INTO `project_attachment` (`name`, `type`, `size`, `path`, `originalname`,`document_name`,`project_name`) VALUES ('" +
       req.file.filename +
       "', '" +
       req.file.mimetype +
@@ -54,18 +54,20 @@ router.post("/document", upload.single("profile"), function (req, res) {
       "', '" +
       req.file.originalname +
       "','" +
+      req.body.document_name +
+      "','" +
       req.body.project_name +
       "'  )";
     dbConn.query(sql, function (err, result) {
       if (err) {
         console.log("error: ", err);
-       // result(err, null);
+        // result(err, null);
       } else {
         console.log(res);
         //  result(null, res.insertId);
         message = "Attachment Successfully! uploaded";
-        res.json({error:false, message: message, status: "success",data:result.insertId });
-       
+        res.json({ error: false, message: message, status: "success", data: result.insertId });
+
       }
       //    console.log('inserted data');
     });
@@ -89,13 +91,13 @@ router.get('/getAll', attachmentController.findAll);
 // Retrieve a single Documents with project_name
 router.get('/:project_name', attachmentController.findById);
 
-router.post('/download', function(req,res,next){
+router.post('/download', function (req, res, next) {
   var file = req.body.filename;
-  
-  var fileLocation = path.join(__dirname,'../uploads')+'/'+file;
+
+  var fileLocation = path.join(__dirname, '../uploads') + '/' + file;
   console.log(fileLocation);
   res.sendFile(fileLocation);
- 
+
 });
 
 module.exports = router;

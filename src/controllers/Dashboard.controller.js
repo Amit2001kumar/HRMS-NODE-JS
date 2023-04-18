@@ -1,7 +1,7 @@
 const Dashboard = require('../models/Dashboard.model');
 
 exports.birthday = function (req, res) {
-    Dashboard.birthday(function (err, birthday) {
+    Dashboard.birthday(req.params.company_id,function (err, birthday) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -12,7 +12,7 @@ exports.birthday = function (req, res) {
 
 
 exports.leaves = function (req, res) {
-    Dashboard.leaves(function (err, leaves) {
+    Dashboard.leaves(req.params.company_id,function (err, leaves) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -32,7 +32,7 @@ exports.newHire = function (req, res) {
 };
 
 exports.knowledgeCenter = function (req, res) {
-    Dashboard.knowledgeCenter(function (err, knowledgeCenter) {
+    Dashboard.knowledgeCenter(req.params.company_id,function (err, knowledgeCenter) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -43,7 +43,7 @@ exports.knowledgeCenter = function (req, res) {
 
 
 exports.approvalForRequests = function (req, res) {
-    Dashboard.approvalForRequests(req.params.EmployeeId, function (err, approvalForRequests) {
+    Dashboard.approvalForRequests(req.params.EmployeeId,req.params.company_id, function (err, approvalForRequests) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -54,7 +54,7 @@ exports.approvalForRequests = function (req, res) {
 
 
 exports.upcomingHolidays = function (req, res) {
-    Dashboard.upcomingHolidays(function (err, upcomingHolidays) {
+    Dashboard.upcomingHolidays(req.params.company_id,function (err, upcomingHolidays) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -65,7 +65,7 @@ exports.upcomingHolidays = function (req, res) {
 
 
 exports.timesheet = function (req, res) {
-    Dashboard.timesheet(function (err, timesheet) {
+    Dashboard.timesheet(req.params.company_id,function (err, timesheet) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -76,7 +76,7 @@ exports.timesheet = function (req, res) {
 
 
 exports.Announcements = function (req, res) {
-    Dashboard.Announcements(function (err, announcements) {
+    Dashboard.Announcements(req.params.company_id,function (err, announcements) {
         console.log('controller')
         if (err)
             res.send(err);

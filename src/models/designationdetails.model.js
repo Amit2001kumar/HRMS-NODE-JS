@@ -3,7 +3,10 @@ var dbConn = require('./../../config/db.config');
 var designationdetails = function(details){
     this.DesignationName     = details.DesignationName;
     this.MailAlias      = details.MailAlias;
+    this.added_by=details.added_by;
+    this.added_time=new Date();
     this.createdDate     = new Date();
+    this.company_id=details.company_id;
     
 };
 designationdetails.create = function (newdetails, result) {    
@@ -46,8 +49,8 @@ designationdetails.findAll = function (result) {
 
 designationdetails.update = function(DesignationDetailsID, detail, result){
    // const idint = bigInt(id).value;
-  dbConn.query("UPDATE tbl_designationdetails SET DesignationName=?,MailAlias=?, WHERE DesignationDetailsID =?",
-  [detail.DesignationName,detail.MailAlias,DesignationDetailsID], function (err, res) {
+  dbConn.query("UPDATE tbl_designationdetails SET DesignationName=?,MailAlias=?,modified_by=?,modified_time=? WHERE DesignationDetailsID =?",
+  [detail.DesignationName,detail.MailAlias,detail.modified_by,detail.modified_time,DesignationDetailsID], function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);

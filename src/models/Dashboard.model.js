@@ -1,7 +1,9 @@
 var dbConn = require('../../config/db.config');
 
-birthday = function (result) {
-    dbConn.query("SELECT name,birthday FROM hrms.tbl_birthdaywish WHERE birthday>=Date(NOW()) ORDER BY birthday ASC LIMIT 3", function (err, res) {
+birthday = function (company_id,result) {
+//     SELECT * FROM hrms.tbl_birthdaywish WHERE birthday>=Date(NOW()) ORDER BY birthday ASC LIMIT 3  //upcoming
+    
+    dbConn.query("SELECT * FROM employees WHERE MONTH(Date_of_Birth) = MONTH(NOW()) AND DAY(Date_of_Birth) = DAY(NOW()) AND employee_status='Active' AND company_id=?",company_id, function (err, res) {   //current
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -14,8 +16,8 @@ birthday = function (result) {
 };
 
 
-leaves = function (result) {
-    dbConn.query("Select * from leaves", function (err, res) {
+leaves = function (company_id,result) {
+    dbConn.query("Select * from leaves WHERE company_id=?",company_id, function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -28,22 +30,22 @@ leaves = function (result) {
 };
 
 newHire = function (result) {
-    dbConn.query("SELECT * FROM (SELECT * FROM tbl_new_hire ORDER BY joiningDate DESC LIMIT 3) Var1 ORDER BY Employee_id ASC ", function (err, res) {
+    dbConn.query("call GetNewHireDetails()", function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);
         }
         else {
-            console.log('newHire : ', res);
-            result(null, res);
+//             console.log('newHire : ', res);
+            result(null, res[0]);
         }
     });
 };
 
 
 
-approvalForRequests = function (EmployeeId, result) {
-    dbConn.query("SELECT * FROM tbl_applyleave where EmployeeId=?;", EmployeeId, function (err, res) {
+approvalForRequests = function (EmployeeId,company_id, result) {
+    dbConn.query("SELECT * FROM tbl_applyleave where EmployeeId=? AND company_id=?",[EmployeeId,company_id], function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -56,8 +58,8 @@ approvalForRequests = function (EmployeeId, result) {
 };
 
 
-upcomingHolidays = function (result) {
-    dbConn.query("SELECT Name,Date FROM add_holidays WHERE Date>=Date(NOW()) ORDER BY Date DESC LIMIT 3", function (err, res) {
+upcomingHolidays = function (company_id,result) {
+    dbConn.query("SELECT Name,Date FROM add_holidays WHERE Date>=Date(NOW()) AND company_id=? ORDER BY Date ASC LIMIT 3",company_id, function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);

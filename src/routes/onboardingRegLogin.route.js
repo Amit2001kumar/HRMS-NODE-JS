@@ -7,11 +7,22 @@ router.post('/employee_reg_onboarding',register);
 
 router.get('/getAllJoiners',getAllOnboardingUsers.getall);
 
+router.get('/getbyid/:id',getAllOnboardingUsers.getbyid);
+
+router.get('/getbycmpnyid/:company_id',getAllOnboardingUsers.getbycmpnyid);
+
 router.post('/getAllsearch',getAllOnboardingUsers.getallsearch);
 
 router.delete('/del/:id',getAllOnboardingUsers.delete);
 
 router.put('/edit/:id',getAllOnboardingUsers.update);
+
+router.put('/:company_email_id',getAllOnboardingUsers.updateDetails);
+
+router.put('/email/:company_email_id',getAllOnboardingUsers.updatebyemail);
+
+// router.put('/:company_email_id/:company_id ',getAllOnboardingUsers.updatebycmpnyid);
+
 
 
 router.post('/employee_login',[

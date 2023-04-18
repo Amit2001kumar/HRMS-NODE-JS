@@ -9,6 +9,7 @@ var Documents = function(doc){
     this.size          = doc.size;
     this.updated_by   = doc.updated_by;
     this.updated_at    = new Date();
+    this.company_id=doc.company_id;
 };
 
 Documents.findAll = function (result) {
@@ -27,6 +28,20 @@ Documents.findAll = function (result) {
 
 Documents.findById = function (email, result) {
     dbConn.query("Select * from Documents where email = ? ORDER BY created_at DESC", email, function (err, res) {             
+        if(err) {
+            console.log("error: ", err);
+           // result(err, null);
+            result(null, err);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
+
+
+Documents.findByCompanyId = function (email,company_id, result) {
+    dbConn.query("Select * from Documents where email=? AND company_id = ? ORDER BY created_at DESC",[email,company_id], function (err, res) {             
         if(err) {
             console.log("error: ", err);
            // result(err, null);

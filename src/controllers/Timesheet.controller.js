@@ -1,7 +1,7 @@
 const TimeSheet = require('../models/TimeSheet.model');
 
 exports.findAll = function (req, res) {
-    TimeSheet.findAll(function (err, timeSheet) {
+    TimeSheet.findAll(req.params.company_id,function (err, timeSheet) {
         console.log('controller')
         if (err)
             res.send(err);
@@ -11,7 +11,7 @@ exports.findAll = function (req, res) {
 };
 
 exports.findByEmpId = function (req, res) {
-    TimeSheet.findByEmpId(req.params.employeeId, function (err, empData) {
+    TimeSheet.findByEmpId(req.params.employeeId,req.params.company_id, function (err, empData) {
         console.log('findEmpID controller')
         if (err)
             res.send(err);
@@ -83,4 +83,18 @@ exports.findBySearch = function(req, res) {
         res.send(err);
         res.json(timesheet);
     });
+};
+
+exports.updateForApproval = function (req, res) {
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+        res.status(400).send({ error: true, message: 'Please provide all required field' });
+    } else {
+//         console.log("......",req.params.employeeId,req.params.TimeSheetId);
+        TimeSheet.updateForApproval(req.params.employeeId,req.params.TimeSheetId, new TimeSheet(req.body), function (err, timeSheet) {
+            if (err)
+                res.send(err);
+            res.json({ leave: timeSheet, error: false, message: 'timeSheet successfully updated for Approval' });
+        });
+    }
+
 };

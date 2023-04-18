@@ -3,7 +3,7 @@
 const Designation = require('../models/designation.model');
 
 exports.findAll = function(req, res) {
-    Designation.findAll(function(err, project) {
+    Designation.findAll(req.params.company_id,function(err, project) {
     console.log('---Designation controller---');
     console.log('Project Request', req)
     if (err)
@@ -23,7 +23,7 @@ exports.create = function(req, res) {
         Designation.create(new_designation,  function(err, designation) {
             if (err)
             res.send(err);
-            if (designation = "already exist")
+            if (designation === "already exist")
             res.json({data:designation, error:true,message:"Designation already exist with this user!"});
             else
             res.json({data:designation, error:false,message:"Designation added successfully!"});
@@ -59,4 +59,20 @@ exports.delete = function(req, res) {
     res.send(err);
     res.json({ designation:designation,error:false, message: 'Designation successfully deleted' });
   });
+};
+
+exports.findBySearch = function(req, res) {
+    Designation.findBySearch(req.body.designation_name, function(err, designation_name) {
+        if (err)
+        res.send(err);
+        res.json(designation_name);
+    });
+};
+
+exports.findAllSearch = function(req, res) {
+    Designation.findAllSearch(req.body.designation_name,function(err, designation_name) {
+        if (err)
+        res.send(err);
+        res.json(designation_name);
+    });
 };

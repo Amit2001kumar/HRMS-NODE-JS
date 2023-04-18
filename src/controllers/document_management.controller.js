@@ -30,7 +30,7 @@ exports.apply = function(req, res) {
 
 
 exports.findById = function(req, res) {
-    documentmanagement.findById(req.params.documentid, function(err, doc) {
+    documentmanagement.findById(req.params.documenttype, function(err, doc) {
         if (err)
         res.send(err);
         res.json(doc);

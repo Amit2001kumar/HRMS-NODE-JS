@@ -4,18 +4,19 @@ var dbConn = require('./../../config/db.config');
 Designation = function(designation){
     this.designation_name     = designation.designation_name;
     this.employee_id      = designation.employee_id;
-    this.CompanyID          = designation.CompanyID;
+    this.company_id          = designation.company_id;
     this.mail_alias          = designation.mail_alias;
-//     this.added_by   = designation.added_by;
-//     this.modified_by    = designation.modified_by;
+   
+    this.modified_by    = designation.modified_by;
     this.status         = designation.status ? designation.status : 1;
-    this.added_time     = new Date();
-    this.modified_time     = new Date();
+     this.added_by=designation.added_by;
+    this.added_time=new Date();
+  
 };
 
 Designation.create = function (designation, result) {  
-    dbConn.query("Select * from designation where designation_name=? and mail_alias=? ",
-    [designation.designation_name,designation.mail_alias], function (err, res) {
+    dbConn.query("Select * from designation where designation_name=? and company_id=? ",
+    [designation.designation_name,designation.company_id], function (err, res) {
         if(err || res.length > 0) {
             console.log("error: ", err);
             const msg = "already exist"
@@ -51,8 +52,8 @@ Designation.findById = function (id, result) {
         }
     });   
 };
-Designation.findAll = function (result) {
-    dbConn.query("Select * from designation", function (err, res) {
+Designation.findAll = function (company_id,result) {
+    dbConn.query("Select * from designation where company_id=? order by added_time DESC ",company_id, function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);
@@ -64,9 +65,10 @@ Designation.findAll = function (result) {
     });   
 };
 Designation.update = function(id, designation, result){
+     let d= new Date();
   dbConn.query
-  ("UPDATE designation SET designation_name=?,mail_alias=?,modified_time=? WHERE id = ?", 
-  [designation.designation_name,designation.mail_alias,designation.modified_time,id], function (err, res) {
+  ("UPDATE designation SET designation_name=?,mail_alias=?,modified_by=?,modified_time=? WHERE id = ?", 
+  [designation.designation_name,designation.mail_alias,designation.modified_by,d,id], function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);
@@ -86,5 +88,32 @@ Designation.delete = function(id, result){
         }
     }); 
 };
+
+Designation.findBySearch = function (designation_name, result) {
+    dbConn.query("Select * FROM designation where designation_name = ? ", designation_name, function (err, res) {             
+        if(err) {
+            console.log("error: ", err);
+            result(err, null);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
+
+Designation.findAllSearch = function (designation_name,result) {
+    // console.log(Employee_id,Employee_Name)
+    dbConn.query("Select * from designation",designation_name, function (err, res) {
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }
+        else{
+            console.log('designation : ', res);  
+            result(null, res);
+        }
+    });   
+  };
+
 
 module.exports= Designation;

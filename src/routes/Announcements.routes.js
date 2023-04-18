@@ -3,7 +3,7 @@ const router = express.Router()
 const AnnouncementsController = require('../controllers/Announcements.controller');
 
 // Retrieve all leaves
-router.get('/getAll', AnnouncementsController.findAll);
+router.get('/getAll/:company_id', AnnouncementsController.findAll);
 
 // Create a new leaves
 router.post('/apply', AnnouncementsController.apply);

@@ -8,7 +8,7 @@ const KnowledgeCenter  = require('../models/KnowledgeCenter.model');
 
 exports.findAll = function(req, res) {
 
-  KnowledgeCenter.findAll(function(err, KnowledgeCenter) {
+  KnowledgeCenter.findAll(req.params.company_id,function(err, KnowledgeCenter) {
     if (err)
     res.send(err);
    
@@ -49,5 +49,15 @@ exports.delete = function(req, res) {
     
   // };
 
-  
+  exports.findAllcenter = function(req, res) {
+
+  KnowledgeCenter.findAllcenter(function(err, KnowledgeCenter) {
+    if (err)
+    res.send(err);
+   
+    console.log('res', KnowledgeCenter);
+    res.json({ message: "KnowledgeCenter has been fetched successfully!", status: "success",data:KnowledgeCenter });
+  });
+
+};
   

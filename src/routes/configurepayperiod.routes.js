@@ -5,14 +5,20 @@ const configurepayperiodController = require('../controllers/configurepayperiod.
 // Retrieve all leaves
 router.get('/getAll', configurepayperiodController.findAll);
 
+// Create a new designation
+router.post('/add', configurepayperiodController.create);
+
 // Create a new leaves
-router.post('/configure', configurepayperiodController.configure);
+// router.post('/configure', configurepayperiodController.configure);
 
 // Retrieve a single leave with id
 router.get('/:ConfigurePayPeriodID', configurepayperiodController.findById);
 
-// Update a applyleaves with id
+// Update a ConfigurePayPeriod with id
 router.put('/:ConfigurePayPeriodID', configurepayperiodController.update);
+
+// Update a applyleaves with id
+// router.put('/:ConfigurePayPeriodID', configurepayperiodController.update);
 
 // Delete a leave with id
 router.delete('/:ConfigurePayPeriodID', configurepayperiodController.delete);

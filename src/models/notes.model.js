@@ -5,6 +5,7 @@ var dbConn = require('./../../config/db.config');
 var Notes = function(notes){
     this.add_notes     = notes.add_notes;
     this.email          = notes.email;
+    this.company_id=notes.company_id;
     // this.status         = notes.status ? notes.status : 1;
     this.created_at     = new Date();
     this.updated_at     = new Date();
@@ -21,17 +22,17 @@ Notes.create = function (newNotes, result) {
         }
     });           
 };
-// Notes.findById = function (id, result) {
-//     dbConn.query("Select * from notes where id = ? ", id, function (err, res) {             
-//         if(err) {
-//             console.log("error: ", err);
-//             result(err, null);
-//         }
-//         else{
-//             result(null, res);
-//         }
-//     });   
-// };
+Notes.findByCompanyId = function (email,company_id, result) {
+    dbConn.query("Select * from notes where email=? AND company_id = ? ",[email,company_id], function (err, res) {             
+        if(err) {
+            console.log("error: ", err);
+            result(err, null);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
 
 Notes.findById = function (email, result) {
     dbConn.query("Select * from notes where email = ? ORDER BY created_at DESC", email, function (err, res) {             

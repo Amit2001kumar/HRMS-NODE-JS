@@ -41,7 +41,7 @@ documentmanagement.create = function (doc, result) {
 
 
 documentmanagement.findById = function (Documentid, result) {
-    dbConn.query("Select * from Document_Management where Documentid = ? ", Documentid, function (err, res) {             
+    dbConn.query("Select * from Document_Management where documenttype=? ", Documentid, function (err, res) {             
         if(err) {
             console.log("error: ", err);
             result(err, null);
@@ -124,7 +124,7 @@ documentmanagement.findBySearch = function (params, result) {
     let module = params.module;
     let documentname = params.documentname;
  
-    var sql = 'SELECT * FROM document_management WHERE module = ? OR documentname = ?';
+    var sql = 'SELECT * FROM document_management WHERE module = ? AND documentname = ?';
     dbConn.query(sql, [module, documentname], function (err, res) {             
         if(err) {
             console.log("error: ", err);

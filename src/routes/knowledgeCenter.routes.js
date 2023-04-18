@@ -80,7 +80,9 @@ router.get("/", function (req, res) {
 // Delete a document with orignalname
 router.delete("/:KnowledgeCenterid", KnowledgeCenterController.delete);
 
-router.get('/getAll', KnowledgeCenterController.findAll);
+router.get('/getAll/:company_id', KnowledgeCenterController.findAll);
+
+router.get('/getAllcenter', KnowledgeCenterController.findAllcenter);
 
 // Retrieve a single Documents with email
 router.get('/:KnowledgeCenterid', KnowledgeCenterController.findById);

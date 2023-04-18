@@ -15,7 +15,7 @@ const nodemailer = require("nodemailer");
 const routes = require('./src/routes/routes');
 const routes1 = require('./src/routes/onboardingRegLogin.route');
 
-
+const routes3=require('./src/routes/CompanyMailing.routes')
 
 // create express app
 const app = express();
@@ -111,6 +111,19 @@ const projectAttachmentRoutes = require('./src/routes/project.attachment.routes'
 
 const projectNotesRoutes = require('./src/routes/project_notes.routes');
 
+const timesheetAttachmentRoutes = require('./src/routes/timesheet.attachment.routes');
+
+const timesheetNotesRoutes = require('./src/routes/timesheet_notes.routes');
+
+const applyleavesAttachmentRoutes = require('./src/routes/applyleaveAttach.routes');
+
+const applyleavesNotesRoutes = require('./src/routes/applyleaveNote.routes');
+
+const companyRoutes = require('./src/routes/company.routes');
+
+const NewLeaveTypeRoutes = require('./src/routes/new_leave_type.routes');
+
+
 //////////////////////
 
 // app.use('/tbl_employee_info', tbl_employee_infoRoutes);
@@ -171,12 +184,24 @@ app.use('/api/v1/designation', designationRoutes);
 
 app.use('/api/v1/branchlocation', branchlocationdetailsRoutes);
 
-
 app.use('/api/v1/documentmanagement', documentmanagementRoutes);
 
 app.use('/api/v1/projectfile', projectAttachmentRoutes);
 
 app.use('/api/v1/projectnote', projectNotesRoutes);
+
+app.use('/api/v1/timesheetfile', timesheetAttachmentRoutes);
+
+app.use('/api/v1/timesheetnote', timesheetNotesRoutes);
+
+app.use('/api/v1/leavefile', applyleavesAttachmentRoutes);
+
+app.use('/api/v1/leavenote', applyleavesNotesRoutes);
+
+app.use('/api/v1/company', companyRoutes);
+
+app.use('/api/v1/newleavetype', NewLeaveTypeRoutes);
+
 
 
 
@@ -191,7 +216,7 @@ app.use((err, req, res, next) => {
 app.use(routes);
 app.use('/api/v1',routes1);
 // listen for requests
-
+app.use('/api/v1',routes3);
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-with, Content-Type, Accept");
@@ -302,19 +327,24 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 app.use("/api/v1/newhire", express.static("./src/uploads"));
 app.get("/api/v1/newhire", upload.single("image"), (req, resp) => {
-  var getQry = "SELECT * FROM hrms.tbl_new_hire";
-  // var getQry =
-  // "SELECT * FROM (SELECT * FROM tbl_new_hire ORDER BY Employee_id DESC LIMIT 5) Var1 ORDER BY Employee_id ASC";
+  var getQry = "call GetNewHireDetails()";
+  
   dbConn.query(getQry, (err, result) => {
     if (err) {
       throw err;
     } else {
       console.log("database connected", result);
 
-      resp.send({
-        result
+//       resp.send({
+//         result
 
-      });
+//       });
+      
+       resp.send(
+        result[0]
+
+      );
+      
     }
   });
 });

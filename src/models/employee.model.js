@@ -6,8 +6,17 @@ var Employee = function (employee) {
     this.first_name = employee.first_name;
     this.last_name = employee.last_name;
     this.email = employee.email;
+     this.employee_id=employee.employee_id;
     this.Date_of_Birth = employee.Date_of_Birth;
-    
+    this.employee_role=employee.employee_role;
+    this.marital_status=employee.marital_status;
+    this.employee_type=employee.employee_type;
+    this.employee_status=employee.employee_status;
+    this.work_location=employee.work_location;
+    this.Date_of_joining=employee.Date_of_joining;
+    this.Title=employee.Title;
+    this.gender=employee.gender;
+    this.age=employee.age;
     this.phone = employee.phone;
     this.organization = employee.organization;
     this.designation = employee.designation;
@@ -19,9 +28,14 @@ var Employee = function (employee) {
     this.skill_set = employee.skill_set;
     this.highest_qualification = employee.highest_qualification;
     this.additional_information = employee.additional_information;
+    this.password=employee.password;
+    this.reporting_manager=employee.reporting_manager;
+    this.company_id=employee.company_id;
     this.status = employee.status ? employee.status : 1;
     this.created_at = new Date();
-    this.updated_at = new Date();
+    this.modified_time = new Date();
+    this.department="IT";
+    
 };
 
 Employee.create = function (newEmp, education, experience, address, pAddress, result) {
@@ -39,7 +53,8 @@ Employee.create = function (newEmp, education, experience, address, pAddress, re
             education[i].degree,
             education[i].date_of_completion,
             education[i].field_of_study,
-            newEmp.email
+            newEmp.email,
+            education[i].company_id
         ])
     }
 
@@ -54,7 +69,10 @@ Employee.create = function (newEmp, education, experience, address, pAddress, re
             experience[i].duration,
             newEmp.email,
 
-            experience[i].currently_work_here])
+            experience[i].currently_work_here,
+            experience[i].company_id
+        
+        ])
     }
 
     for (let i = 0; i < address.length; i++) {
@@ -68,7 +86,8 @@ Employee.create = function (newEmp, education, experience, address, pAddress, re
             address[i].street_address,
             newEmp.email,
             address[i].address_type,
-            address[i].same_as_current_address
+            address[i].same_as_current_address,
+            address[i].company_id
 
         ])
      
@@ -86,8 +105,8 @@ Employee.create = function (newEmp, education, experience, address, pAddress, re
           pAddress[i].pStreet_address,
            newEmp.email,
              pAddress[i].address_type,
-           pAddress[i].same_as_current_address
-       
+           pAddress[i].same_as_current_address,
+       pAddress[i].company_id
             ])}
 console.log(p_addressValues);
     dbConn.query("INSERT INTO employees set ?", newEmp,
@@ -141,8 +160,8 @@ Employee.findById = function (id, result) {
         }
     });
 };
-Employee.findAll = function (result) {
-    dbConn.query("Select * from employees", function (err, res) {
+Employee.findAll = function (company_id,result) {
+    dbConn.query("Select * from employees where company_id=?",company_id, function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(null, err);
@@ -323,4 +342,54 @@ Employee.update = function (email,employee,education, experience, address, pAddr
             });
     };
 
+
+Employee.updateAfterPreonBoarding = function(email, Details, result){
+      
+       dbConn.query("UPDATE employees SET employee_id=?,official_email=?,password=?,modified_time=?,age=?,gender=?,Title=?,Date_of_joining=?,work_location=?,employee_role=?,marital_status=?,employee_type=?,employee_status=?,reporting_manager=? where email=?",
+       [  
+        Details.employee_id,Details.official_email,Details.password,Details.modified_time,Details.age,Details.gender,Details.Title,Details.Date_of_joining,Details.work_location,Details.employee_role,Details.marital_status,Details.employee_type,Details.employee_status, 
+           Details.reporting_manager,email], function (err, res) {
+             if(err) {
+                 console.log("error: ", err);
+                 result(null, err);
+             }else{   
+                 result(null, res);
+             }
+         }); 
+       };
+
+ Employee.findEmployeeByEmployeeId = function (employee_id, result) {
+        dbConn.query("Select * from employees where employee_id = ? ", employee_id, function (err, res) {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+            }
+            else {
+                result(null, res);
+            }
+        });
+    };
+Employee.SearchEmployeeByEmployeeIdAndName = function (company_id,employee_id,first_name,last_name, result) {
+        dbConn.query("Select * from employees where company_id=? OR employee_id = ? OR first_name=? OR last_name=? ", [company_id,employee_id,first_name,last_name], function (err, res) {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+            }
+            else {
+                result(null, res);
+            }
+        });
+    };  
+
+Employee.SearchAllEmployeeByEmployeeIdAndName = function (company_id,employee_id,first_name,last_name, result) {
+        dbConn.query("Select * from employees where company_id=?", [company_id,employee_id,first_name,last_name], function (err, res) {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+            }
+            else {
+                result(null, res);
+            }
+        });
+    };  
 module.exports = Employee;

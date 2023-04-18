@@ -1,7 +1,7 @@
 const departmentdetails = require('../models/departmentdetails.model');
 
 exports.findAll = function(req, res) {
-    departmentdetails.findAll(function(err, details) {
+    departmentdetails.findAll(req.params.company_id,function(err, details) {
     console.log('controller')
     if (err)
     res.send(err);
@@ -21,7 +21,10 @@ exports.apply = function(req, res) {
         departmentdetails.create(new_details, function(err, details) {
             if (err)
             res.send(err);
-            res.json({error:false,message:"details applied successfully!",data:details});
+            if (details === "already exist")
+            res.json({data:details, error:true,message:"Department already exist with this user!"});
+            else
+            res.json({data:details, error:false,message:"Department added successfully!"});
         });
     }
 };
@@ -56,4 +59,20 @@ exports.delete = function(req, res) {
     res.send(err);
     res.json({ error:false, message: 'details successfully deleted' });
   });
+};
+
+exports.findBySearch = function (req, res) {
+    departmentdetails.findBySearch(req.body.departmentName, function (err, department) {
+        if (err)
+            res.send(err);
+        res.json(department);
+    });
+};
+
+exports.findAllSearch = function(req, res) {
+    departmentdetails.findAllSearch(req.body.departmentName, function(err, department) {
+        if (err)
+        res.send(err);
+        res.json(department);
+    });
 };

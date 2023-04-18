@@ -11,21 +11,38 @@ exports.findAll = function(req, res) {
 };
 
 
-exports.configure = function(req, res) {
-    const new_period = new configurepayperiod(req.body);
+// exports.configure = function(req, res) {
+//     const new_period = new configurepayperiod(req.body);
 
+//     //handles null error 
+//    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+//         res.status(400).send({ error:true, message: 'Please provide all required field' });
+//     }else{
+//         configurepayperiod.create(new_period, function(err, Period) {
+//             if (err)
+//             res.send(err);
+//             res.json({error:false,message:"configurepayperiod successfully!",data:Period});
+//         });
+//     }
+// };
+
+
+exports.create = function(req, res) {
+    const new_period = new configurepayperiod(req.body);
     //handles null error 
    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
         res.status(400).send({ error:true, message: 'Please provide all required field' });
     }else{
-        configurepayperiod.create(new_period, function(err, Period) {
+        configurepayperiod.create(new_period,  function(err, period) {
             if (err)
             res.send(err);
-            res.json({error:false,message:"configurepayperiod successfully!",data:Period});
+            if (period === "already exist")
+            res.json({data:period, error:true,message:"Period name already exist with this cycle!"});
+            else
+            res.json({data:period, error:false,message:"Period Details added successfully!"});
         });
     }
 };
-
 
 exports.findById = function(req, res) {
     configurepayperiod.findById(req.params.ConfigurePayPeriodID, function(err, Period) {

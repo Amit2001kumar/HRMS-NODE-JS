@@ -1,7 +1,7 @@
 const Announcements = require('../models/Announcements.model');
 
 exports.findAll = function(req, res) {
-    Announcements.findAll(function(err, Announcements) {
+    Announcements.findAll(req.params.company_id,function(err, Announcements) {
     console.log('controller')
     if (err)
     res.send(err);

@@ -118,4 +118,21 @@ PendingReport.delete = function(PendingReportID , result){
     }); 
 };
 
+
+
+//working
+PendingReport.updateById = function(EmployeeId  , leave, result){
+
+  dbConn.query("UPDATE tbl_pending_report SET Action=? WHERE EmployeeId=?",
+  [leave.Action,EmployeeId], function (err, res) {
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }else{   
+            result(null, res.message);
+        }
+    }); 
+};
+
+
 module.exports= PendingReport;

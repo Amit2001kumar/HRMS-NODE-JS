@@ -28,6 +28,18 @@ exports.findById = function(req, res) {
   });
 };
 
+exports.findByCompanyId = function(req, res) {
+  Document.findByCompanyId(req.params.email,req.params.company_id, function(err, Document) {
+      if (err)
+      res.send(err);
+      
+     // res.json(Document);
+      res.json({ message: "Attachment has been fetched successfully!", status: "success",data:Document });
+
+  });
+};
+
+
 
 
 exports.delete = function(req, res) {

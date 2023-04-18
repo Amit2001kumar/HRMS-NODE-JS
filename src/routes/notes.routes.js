@@ -9,7 +9,7 @@ router.get('/getAll', notesController.findAll);
 router.post('/create', notesController.create);
 
 // Retrieve a single Notes with id
-// router.get('/:id', notesController.findById);
+router.get('/:email/:company_id', notesController.findByCompanyId);
 
 // Retrieve a single Notes with email
 router.get('/:email', notesController.findById);

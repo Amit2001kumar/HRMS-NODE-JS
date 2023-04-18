@@ -5,6 +5,9 @@ const addleavesController = require('../controllers/Addleave.controller');
 // Retrieve all leaves
 router.get('/getAll', addleavesController.findAll);
 
+//Retrive total leave
+router.get('/totalLeave', addleavesController.findTotalLeave);
+
 // Create a new leaves
 router.post('/add', addleavesController.add);
 

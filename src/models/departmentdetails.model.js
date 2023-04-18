@@ -10,19 +10,19 @@ var departmentdetails = function(details){
     this.MailAlias = details.MailAlias
     this.DepartmentLead =  details.DepartmentLead
     this.ParentDepartment = details.ParentDepartment
-//    this.employee_id      = designation.employee_id;
-//     this.company_id          = designation.company_id;
-//     this.added_by   = designation.added_by;
-//     this.modified_by    = designation.modified_by;
+//    this.employee_id      = details.employee_id;
+//     this.company_id          = details.company_id;
+    this.added_by   = details.added_by;
+    this.modified_by    = details.modified_by;
     this.status         = details.status ? details.status : 1;
     this.added_time     = new Date();
-    this.modified_time     = new Date();
-    
+
+    this.company_id=details.company_id
     
 };
 departmentdetails.create = function (details, result) {  
-    dbConn.query("Select * from department where departmentName=? and MailAlias=?",
-    [details.departmentName,details.MailAlias], function (err, res) {
+    dbConn.query("Select * from department where departmentName=? and company_id=?",
+    [details.departmentName,details.company_id], function (err, res) {
         if(err || res.length > 0) {
             console.log("error: ", err);
             const msg = "already exist"
@@ -59,8 +59,8 @@ departmentdetails.findById = function (departmentId, result) {
     });   
 };
 
-departmentdetails.findAll = function (result) {
-    dbConn.query("Select * from department", function (err, res) {
+departmentdetails.findAll = function (company_id,result) {
+    dbConn.query("Select * from department where company_id=?",company_id, function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);
@@ -74,8 +74,9 @@ departmentdetails.findAll = function (result) {
 
 departmentdetails.update = function(departmentId, details, result){
    // const idint = bigInt(id).value;
-  dbConn.query("UPDATE department SET departmentName=?,MailAlias=?,DepartmentLead=?,ParentDepartment=?,modified_time=? WHERE departmentId =?",
-  [details.departmentName,details.MailAlias,details.DepartmentLead,details.ParentDepartment,details.modified_time,departmentId], function (err, res) {
+     let d= new Date();
+  dbConn.query("UPDATE department SET departmentName=?,MailAlias=?,DepartmentLead=?,ParentDepartment=?,modified_by=?,modified_time=? WHERE departmentId =?",
+  [details.departmentName,details.MailAlias,details.DepartmentLead,details.ParentDepartment,details.modified_by,d,departmentId], function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);
@@ -96,5 +97,33 @@ departmentdetails.delete = function(departmentId, result){
         }
     }); 
 };
+
+
+departmentdetails.findBySearch = function (departmentName, result) {
+    dbConn.query("Select * FROM department where departmentName = ? ", departmentName, function (err, res) {             
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
+
+departmentdetails.findAllSearch = function (departmentName,result) {
+    // console.log(Employee_id,Employee_Name)
+    dbConn.query("Select * from department",departmentName, function (err, res) {
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }
+        else{
+            console.log('department : ', res);  
+            result(null, res);
+        }
+    });   
+  };
+
 
 module.exports= departmentdetails;

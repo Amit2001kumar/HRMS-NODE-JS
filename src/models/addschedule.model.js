@@ -12,23 +12,69 @@ var AddSchedule = function (schedule) {
     this.Roles = schedule.Roles;
     this.Location = schedule.Location;
     this.Groups = schedule.Groups;
-    this.createdDate = new Date();
+    // this.createdDate = new Date();
+    this.added_by=schedule.added_by
+       this.modified_by=schedule.modified_by
+//   this.modified_by=schedule.modified_by
 
 };
 
 
-AddSchedule.create = function (newSchedule, result) {
-    dbConn.query("INSERT INTO addschedule set ?", newSchedule, function (err, res) {
-        if (err) {
+// AddSchedule.create = function (newSchedule, result) {
+//     dbConn.query("INSERT INTO addschedule set ?", newSchedule, function (err, res) {
+//         if (err) {
+//             console.log("error: ", err);
+//             result(err, null);
+//         }
+//         else {
+//             console.log(res.insertId);
+//             result(null, res.insertId);
+//         }
+//     });
+// };
+
+
+
+
+
+AddSchedule.create = function (newSchedule, result) {    
+         dbConn.query("Select * from addschedule where ScheduleName=? and LeaveID=? and Date=?",
+    [newSchedule.ScheduleName,newSchedule.LeaveID,newSchedule.Date], function (err, res) {
+             
+        if(err || res.length > 0) {
             console.log("error: ", err);
-            result(err, null);
+            const msg = "already exist"
+            result(err, msg);
+           
         }
-        else {
-            console.log(res.insertId);
-            result(null, res.insertId);
+        else{
+            dbConn.query("INSERT INTO addschedule set ?", newSchedule, 
+            function (err, res) {
+                if(err) {
+                    console.log("error: ", err);
+                    result(err, null);
+                }
+                else{
+                    result(null, res.insertId);
+                   
+                    
+                }
+            });  
         }
-    });
+    }); 
+     
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 AddSchedule.findAll = function (result) {
@@ -58,18 +104,20 @@ AddSchedule.findById = function (AddScheduleId, result) {
 };
 
 
-AddSchedule.update = function (AddScheduleId, leave, result) {
+AddSchedule.update = function(AddScheduleId, schedule, result){
     // const idint = bigInt(id).value;
-    dbConn.query("UPDATE addschedule SET employee_id=?,leave_type=?,email=?,date_from=?,date_to=?,reporting_manager=?,reason_for_leave=?, additional_email=?, WHERE AddScheduleId =?",
-        [leave.employee_id, leave.leave_type, leave.email, leave.date_from, leave.date_to, leave.reporting_manager, leave.reason_for_leave, leave.additional_email, AddScheduleId], function (err, res) {
-            if (err) {
-                console.log("error: ", err);
-                result(null, err);
-            } else {
-                result(null, res);
-            }
-        });
-};
+    let m= new Date();
+   dbConn.query("UPDATE addschedule SET ScheduleName=?,TimeofSchedule=?,LeaveType=?,LeaveID=?,Date=?,modified_by=?,modified_time=? WHERE AddScheduleId =?",
+   [schedule.ScheduleName,schedule.TimeofSchedule,schedule.LeaveType,schedule.LeaveID,schedule.Date,schedule.modified_by,
+    m,AddScheduleId], function (err, res) {
+         if(err) {
+             console.log("error: ", err);
+             result(null, err);
+         }else{   
+             result(null, res);
+         }
+     }); 
+ };
 
 
 AddSchedule.delete = function(AddScheduleId, result){
@@ -83,6 +131,38 @@ AddSchedule.delete = function(AddScheduleId, result){
        }
    }); 
 };
+
+
+
+
+
+
+
+AddSchedule.findBySearch = function (ScheduleName, result) {
+    dbConn.query("Select * FROM addschedule where ScheduleName = ? ", ScheduleName, function (err, res) {             
+        if(err) {
+            console.log("error: ", err);
+            result(err, null);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
+
+AddSchedule.findAllSearch = function (ScheduleName,result) {
+    // console.log(AddScheduleId,Employee_Name)
+    dbConn.query("Select * FROM addschedule",ScheduleName, function (err, res) {
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }
+        else{
+            console.log('ScheduleName : ', res);  
+            result(null, res);
+        }
+    });   
+  };
 
 
 

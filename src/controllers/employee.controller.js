@@ -3,7 +3,7 @@
 const Employee = require('../models/employee.model');
 
 exports.findAll = function(req, res) {
-  Employee.findAll(function(err, employee) {
+  Employee.findAll(req.params.company_id,function(err, employee) {
     console.log('controller')
     if (err)
     res.send(err);
@@ -85,4 +85,42 @@ exports.delete = function(req, res) {
     res.send(err);
     res.json({ error:false, message: 'Employee successfully deleted' });
   });
+};
+
+
+exports.updateAfterPreonBoarding = function(req, res) {
+    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+        res.status(400).send({ error:true, message: 'Please provide all required field' });
+    }else{
+        Employee.updateAfterPreonBoarding(req.params.email, new Employee(req.body), function(err, Details) {
+            if (err)
+            res.send(err);
+            res.json({ Details : Details, error:false, message: 'Employee successfully updated' });
+        });
+    }
+  
+};
+
+exports.findEmployeeByEmployeeId = function(req, res) {
+    Employee.findEmployeeByEmployeeId(req.body.employee_id, function(err, employee) {
+        if (err)
+        res.send(err);
+        res.json(employee);
+    });
+};
+
+exports.SearchEmployeeByEmployeeIdAndName = function(req, res) {
+    Employee.SearchEmployeeByEmployeeIdAndName(req.body.company_id,req.body.employee_id,req.body.first_name,req.body.last_name, function(err, employee) {
+        if (err)
+        res.send(err);
+        res.json(employee);
+    });
+};
+
+exports.SearchAllEmployeeByEmployeeIdAndName = function(req, res) {
+    Employee.SearchAllEmployeeByEmployeeIdAndName(req.body.company_id,req.body.employee_id,req.body.first_name,req.body.last_name, function(err, employee) {
+        if (err)
+        res.send(err);
+        res.json(employee);
+    });
 };

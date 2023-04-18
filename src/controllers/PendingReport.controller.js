@@ -57,3 +57,21 @@ exports.delete = function(req, res) {
     res.json({ error:false, message: 'pendingReport successfully deleted' });
   });
 };
+
+
+// ............................updateUser...........................................
+
+
+exports.updateById = function(req, res) {
+    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+        res.status(400).send({ error:true, message: 'Please provide all required field' });
+    }else{
+        console.log("..",req.params.EmployeeId,req.body);
+        PendingReport.updateById(req.params.EmployeeId , new PendingReport(req.body), function(err, pendingReport) {
+            if (err)
+            res.send(err);
+            res.json({ pendingReport : pendingReport, error:false, message: 'pendingReport Action successfully updated' });
+        });
+    }
+  
+};

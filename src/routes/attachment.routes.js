@@ -43,7 +43,7 @@ router.post("/document", upload.single("profile"), function (req, res) {
     console.log("file received");
     console.log(req);
     var sql =
-      "INSERT INTO `Documents` (`name`, `type`, `size`, `path`, `originalname`,`email`) VALUES ('" +
+      "INSERT INTO `Documents` (`name`, `type`, `size`, `path`, `originalname`,`email`,`document_name`) VALUES ('" +
       req.file.filename +
       "', '" +
       req.file.mimetype +
@@ -55,7 +55,9 @@ router.post("/document", upload.single("profile"), function (req, res) {
       req.file.originalname +
       "','" +
       req.body.email +
-      "'  )";
+       "','" +
+      req.body.document_name +
+      "' )";
     dbConn.query(sql, function (err, result) {
       if (err) {
         console.log("error: ", err);
@@ -85,6 +87,9 @@ router.get("/", function (req, res) {
 router.delete("/:id", attachmentController.delete);
 
 router.get('/getAll', attachmentController.findAll);
+
+
+router.get('/:email/:company_id', attachmentController.findByCompanyId);
 
 // Retrieve a single Documents with email
 router.get('/:email', attachmentController.findById);

@@ -20,9 +20,12 @@ exports.add = function(req, res) {
         res.status(400).send({ error:true, message: 'Please provide all required field' });
     }else{
         AddExitDetails.create(new_Details, function(err, Details) {
-            if (err)
+             if (err)
             res.send(err);
-            res.json({error:false,message:"AddExitDetails successfully!",data:Details});
+            if (Details === "already exist")
+            res.json({data:Details, error:true,message:"This employee name or id already exist!"});
+            else
+            res.json({data:Details, error:false,message:"Exit details added successfully!"});
         });
     }
 };
@@ -52,9 +55,24 @@ exports.update = function(req, res) {
 
 
 exports.delete = function(req, res) {
-    AddExitDetails.delete( req.params.Employee_id, function(err, employee) {
+    AddExitDetails.delete( req.params.AddExitDetailsId, function(err, employee) {
     if (err)
     res.send(err);
     res.json({ error:false, message: 'Employee successfully deleted' });
   });
+};
+
+exports.findByEmpIdName = function(req, res) {
+    AddExitDetails.findByEmpIdName(req.body.Employee_id,req.body.Employee_Name, function(err, Details) {
+        if (err)
+        res.send(err);
+        res.json(Details);
+    });
+};
+exports.findAllSearch = function(req, res) {
+    AddExitDetails.findAllSearch(req.body.Employee_id,req.body.Employee_Name, function(err, Details) {
+        if (err)
+        res.send(err);
+        res.json(Details);
+    });
 };

@@ -5,7 +5,7 @@ var dbConn = require('./../../config/db.config');
 var Announcements = function(Announ){
    
     this.Employee_id      = Announ.Employee_id;
-    this.CompanyID          = Announ.CompanyID;
+    this.company_id          = Announ.company_id;
     this.Meeting          = Announ.Meeting;
     this.Date         = Announ.Date;  
 };
@@ -34,8 +34,8 @@ Announcements.findById = function (Announcementsid, result) {
     });   
 };
 
-Announcements.findAll = function (result) {
-    dbConn.query("Select * from Announcements", function (err, res) {
+Announcements.findAll = function (company_id,result) {
+    dbConn.query("Select * from Announcements where company_id=?",company_id, function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);

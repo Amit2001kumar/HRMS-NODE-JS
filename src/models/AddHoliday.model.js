@@ -18,8 +18,11 @@ var AddHolidays = function(holidays){
    
 };
 AddHolidays.create = function (newholidays, result) {    
-    dbConn.query("Select * from add_holidays where Name=? and Date=?",
-    [newholidays.Name,newholidays.Date], function (err, res) {
+//     dbConn.query("Select * from add_holidays where Name=? and Date=?",
+//     [newholidays.Name,newholidays.Date], function (err, res) {
+         dbConn.query("Select * from add_holidays where Name=?",
+    [newholidays.Name], function (err, res) {
+             
         if(err || res.length > 0) {
             console.log("error: ", err);
             const msg = "already exist"
@@ -57,7 +60,7 @@ AddHolidays.findById = function (HolidayId, result) {
 };
 
 AddHolidays.findAll = function (result) {
-    dbConn.query("Select * from add_holidays", function (err, res) {
+    dbConn.query("Select * from add_holidays order by createdDate DESC", function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);

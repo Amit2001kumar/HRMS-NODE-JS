@@ -30,13 +30,13 @@ exports.findAll = function(req, res) {
     });
   };
 
-// exports.findById = function(req, res) {
-//     Notes.findById(req.params.id, function(err, notes) {
-//         if (err)
-//         res.send(err);
-//         res.json(notes);
-//     });
-// };
+exports.findByCompanyId = function(req, res) {
+    Notes.findByCompanyId(req.params.email,req.params.company_id, function(err, notes) {
+        if (err)
+        res.send(err);
+        res.json(notes);
+    });
+};
 exports.findById = function(req, res) {
     Notes.findById(req.params.email, function(err, notes) {
         if (err)

@@ -28,18 +28,38 @@ exports.delete = function (req, res) {
 };
 
 
-exports.update = function(req, res) {
-    if(req.body.constructor === Object && Object.keys(req.body).length === 0){
-        res.status(400).send({ error:true, message: 'Please provide all required field' });
-    }else{
-        Project.update(req.params.id, new Project(req.body), function(err, project) {
+// exports.update = function(req, res) {
+//     if(req.body.constructor === Object && Object.keys(req.body).length === 0){
+//         res.status(400).send({ error:true, message: 'Please provide all required field' });
+//     }else{
+//         Project.update(req.params.id, new Project(req.body), function(err, project) {
+//             if (err)
+//             res.send(err);
+//             res.json({ project: project,error:false, message: 'Project successfully updated' });
+//         });
+//     }
+  
+// };
+
+
+exports.update = function (req, res) {
+    const new_project = new Project(req.body);
+    const repository = req.body.repository;
+
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+        res.status(400).send({ error: true, message: 'Please provide all required field' });
+        // console.log("if",req.body)
+    } else {
+        // console.log("else",req.body)
+
+        Project.update(req.params.project_name, new_project, repository, function (err) {
             if (err)
-            res.send(err);
-            res.json({ project: project,error:false, message: 'Project successfully updated' });
+                res.send(err);
+            res.json({ error: false, message: 'Projects successfully updated' });
         });
     }
-  
 };
+
 
 exports.findAll = function (req, res) {
     Project.findAll(function (err, project) {
@@ -51,8 +71,16 @@ exports.findAll = function (req, res) {
     });
 };
 
+// exports.findById = function(req, res) {
+//     Project.findById(req.params.id, function(err, project) {
+//         if (err)
+//         res.send(err);
+//         res.json(project);
+//     });
+// };
+
 exports.findById = function(req, res) {
-    Project.findById(req.params.id, function(err, project) {
+    Project.findById(req.params.project_name, function(err, project) {
         if (err)
         res.send(err);
         res.json(project);
@@ -61,6 +89,14 @@ exports.findById = function(req, res) {
 
 exports.findBySearch = function(req, res) {
     Project.findBySearch(req.body, function(err, project) {
+        if (err)
+        res.send(err);
+        res.json(project);
+    });
+};
+
+exports.findByMultiSearch = function(req, res) {
+    Project.findByMultiSearch(req.body, function(err, project) {
         if (err)
         res.send(err);
         res.json(project);

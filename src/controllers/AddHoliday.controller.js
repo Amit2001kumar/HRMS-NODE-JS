@@ -21,7 +21,10 @@ exports.add = function(req, res) {
         AddHolidays.create(new_holidays, function(err, holiday) {
             if (err)
             res.send(err);
-            res.json({error:false,message:"holidays applied successfully!",data:holiday});
+            if (holiday === "already exist")
+            res.json({data:holiday, error:true,message:"This holiday name details already exist with this date!"});
+            else
+            res.json({data:holiday, error:false,message:"Holiday details added successfully!"});
         });
     }
 }; 

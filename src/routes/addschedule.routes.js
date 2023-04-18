@@ -17,5 +17,11 @@ router.put('/:AddScheduleId', addscheduleController.update);
 
 router.delete('/:AddScheduleId', addscheduleController.delete);
 
+// Retrieve a single leave with id and name
+router.post('/findBySearch', addscheduleController.findBySearch);
+
+//get  by search
+router.post('/findAllSearch', addscheduleController.findAllSearch);
+
 module.exports = router;
 

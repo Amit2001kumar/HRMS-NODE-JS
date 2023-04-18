@@ -3,7 +3,7 @@ const router = express.Router()
 const TimesheetController = require('../controllers/Timesheet.controller');
 
 // Retrieve all timesheet
-router.get('/getAll', TimesheetController.findAll);
+router.get('/getAll/:company_id', TimesheetController.findAll);
 
 // Create a new timesheet
 router.post('/insert', TimesheetController.apply);
@@ -21,9 +21,14 @@ router.delete('/:TimeSheetId', TimesheetController.delete);
 router.get('/totalworkinghrs/:employeeId', TimesheetController.month);
 
 
-router.get('/emp/:employeeId', TimesheetController.findByEmpId);
+router.get('/emp/:employeeId/:company_id', TimesheetController.findByEmpId);
 
 // Retrieve a  project with search result
 router.post('/search', TimesheetController.findBySearch);
+
+
+// Update a timesheet for approval
+router.put('/ApprovalRequest/:employeeId/:TimeSheetId', TimesheetController.updateForApproval);
+
 
 module.exports = router;

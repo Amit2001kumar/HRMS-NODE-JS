@@ -6,13 +6,14 @@ var KnowledgeCenter = function(doc){
     this.Title = doc.Title;
     this.Link = doc.Link
     this.documentname     = doc.documentname;
-    this.AddDescription = doc.AddDescription
+    this.AddDescription = doc.AddDescription;
+    this.company_id=doc.company_id;
     this.updated_by   = doc.updated_by;
     this.updated_at    = new Date();
 };
 
-KnowledgeCenter.findAll = function (result) {
-    dbConn.query("SELECT * FROM knowledgecenter  order by uploadedDate asc Limit 3 ", function (err, res) {
+KnowledgeCenter.findAll = function (company_id,result) {
+    dbConn.query("SELECT * FROM knowledgecenter where company_id=? order by uploadedDate asc Limit 3 ",company_id, function (err, res) {
         if(err) {
             console.log("error: ", err);
             result(null, err);
@@ -49,6 +50,17 @@ KnowledgeCenter.delete = function(KnowledgeCenterid, result){
    }); 
 };
 
-
+KnowledgeCenter.findAllcenter = function (result) {
+    dbConn.query("SELECT * FROM knowledgecenter", function (err, res) {
+        if(err) {
+            console.log("error: ", err);
+            result(null, err);
+        }
+        else{
+           console.log('KnowledgeCenter : ', res); 
+            result(null, res);
+        }
+    });  
+};
 
 module.exports= KnowledgeCenter;

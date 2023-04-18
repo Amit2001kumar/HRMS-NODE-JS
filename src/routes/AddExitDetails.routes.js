@@ -15,6 +15,13 @@ router.get('/:Employee_id', AddExitDetailsController.findById);
 router.put('/:Employee_id', AddExitDetailsController.update);
 
 // Delete a leave with id
-router.delete('/:Employee_id', AddExitDetailsController.delete);
+router.delete('/del/:AddExitDetailsId', AddExitDetailsController.delete);
+
+
+// Retrieve a single leave with id and name
+router.post('/findByEmpIdName', AddExitDetailsController.findByEmpIdName);
+
+//get  by search
+router.post('/findAllSearch', AddExitDetailsController.findAllSearch);
 
 module.exports = router;

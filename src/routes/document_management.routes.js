@@ -9,7 +9,7 @@ router.get('/getAll', documentmanagementController.findAll);
 router.post('/apply', documentmanagementController.apply);
 
 // Retrieve a single leave with id
-router.get('/:documentid', documentmanagementController.findById);
+router.get('/:documenttype', documentmanagementController.findById);
 
 // Update a applyleaves with id
 router.put('/:documentid', documentmanagementController.update);
